@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI创意文案生成器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI创意文案生成器</h1>
+            <p>输入主题，让AI为你生成精彩文案</p>
+        </header>
+        
+        <main>
+            <div class="input-area">
+                <textarea id="input" placeholder="请输入文案主题或需求，例如：咖啡馆宣传语、产品推广文案等" maxlength="200"></textarea>
+                <div class="input-footer">
+                    <span id="word-count">0/200</span>
+                    <button id="generate-btn" onclick="generate()">生成文案</button>
+                </div>
+            </div>
+            
+            <div class="result-area">
+                <h2>生成结果</h2>
+                <div id="result" class="result-content">
+                    生成的文案将显示在这里...
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2023 AI创意文案生成器 |  powered by AI</p>
+        </footer>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

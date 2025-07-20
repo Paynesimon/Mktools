@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marketers Tools - 工具集合</title>
+    <script src="https://cdn.tailwindcss.com/3.3.3"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);
+        }
+        .tool-card {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(99, 102, 241, 0.1);
+            border-color: #c7d2fe;
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: #6366f1;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .mobile-menu {
+            transform-origin: top;
+            transform: scaleY(0);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        .mobile-menu.active {
+            transform: scaleY(1);
+            opacity: 1;
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="glassmorphism sticky top-0 z-50 p-4 shadow-sm">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-8">
+                <a href="/" class="text-xl font-bold text-indigo-600 flex items-center">
+                    <i class="fas fa-tools mr-2"></i>Marketers Tools
+                </a>
+                <div class="hidden md:flex space-x-6">
+                    <a href="/" class="nav-link text-gray-600 hover:text-indigo-600">工具集合</a>
+                    <a href="/update_history" class="nav-link text-gray-600 hover:text-indigo-600">更新日志</a>
+                    <a href="/message_board" class="nav-link text-gray-600 hover:text-indigo-600">留言反馈</a>
+                    <a href="/hide_tool" class="nav-link text-gray-600 hover:text-indigo-600">工具管理</a>
+                    <a href="/docs" class="nav-link text-gray-600 hover:text-indigo-600">帮助</a>
+                    <a href="/setting" class="nav-link text-gray-600 hover:text-indigo-600">设置</a>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="/user/login" class="text-gray-600 hover:text-indigo-600">登陆</a>
+                <button class="md:hidden text-gray-600" id="mobileMenuButton">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端菜单 -->
+        <div class="mobile-menu md:hidden absolute left-0 right-0 bg-white shadow-lg rounded-b-lg overflow-hidden" id="mobileMenu">
+            <div class="p-4 space-y-2">
+                <a href="/" class="block py-2 px-4 rounded hover:bg-indigo-50 text-gray-700"><i class="fas fa-tools mr-2 text-indigo-500"></i>工具集合</a>
+                <a href="/update_history" class="block py-2 px-4 rounded hover:bg-indigo-50 text-gray-700"><i class="fas fa-history mr-2 text-indigo-500"></i>更新日志</a>
+                <a href="/message_board" class="block py-2 px-4 rounded hover:bg-indigo-50 text-gray-700"><i class="fas fa-comment-alt mr-2 text-indigo-500"></i>留言反馈</a>
+                <a href="/hide_tool" class="block py-2 px-4 rounded hover:bg-indigo-50 text-gray-700"><i class="fas fa-cog mr-2 text-indigo-500"></i>工具管理</a>
+                <a href="/docs" class="block py-2 px-4 rounded hover:bg-indigo-50 text-gray-700"><i class="fas fa-question-circle mr-2 text-indigo-500"></i>帮助</a>
+                <a href="/setting" class="block py-2 px-4 rounded hover:bg-indigo-50 text-gray-700"><i class="fas fa-sliders-h mr-2 text-indigo-500"></i>设置</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto py-8 px-4">
+        <!-- 公告区 -->
+        <section class="glassmorphism p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4 text-indigo-600"><i class="fas fa-bullhorn mr-2"></i>公告</h2>
+            <div class="space-y-3 text-gray-700">
+                <p><i class="fas fa-info-circle text-indigo-500 mr-2"></i> 热门新功能推荐维护中</p>
+                <p><i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i> <strong>请不要使用任何盗版 App，否则可能出现闪退、账号丢失等问题</strong></p>
+                <p><i class="fas fa-qq text-blue-500 mr-2"></i> QQ闲聊群：<a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=rpNujfltM6qMBmzN8pAttjCWgK7C0GaI&authKey=W%2BeeeZpOiVh6YgYKx3EZyh5gkPx95NkHFJnEk0eoTqTa5TP4g0HWbCVHSL8cgMFy&noverify=0&group_code=414931159" class="text-indigo-600 hover:underline">414931159</a></p>
+                <p><i class="fas fa-globe text-green-500 mr-2"></i> 如果本站无法打开或访问速度慢，可以尝试使用 <a href="https://okmiku.com" class="text-indigo-600 hover:underline">https://okmiku.com</a></p>
+                <p><i class="fas fa-coffee text-amber-600 mr-2"></i> 请作者喝一杯咖啡：<a href="/user/pay" class="text-indigo-600 font-bold hover:underline">点我开通会员</a></p>
+                <p><i class="fas fa-link text-purple-500 mr-2"></i> 域名发布站：<a href="https://github.com/Ice-Hazymoon/domains" class="text-indigo-600 hover:underline">https://github.com/Ice-Hazymoon/domains</a></p>
+                <p><i class="fas fa-tag text-red-500 mr-2"></i> <a href="https://taobao.okmiku.com/" class="text-indigo-600 hover:underline">双十一淘宝优惠券精选点我</a></p>
+                
+                <div class="mt-4 p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-400">
+                    <p class="text-sm"><i class="fas fa-tools text-yellow-600 mr-2"></i> <strong>4月1日：维护通知</strong></p>
+                    <p class="text-sm mt-1">部分功能正在维护中，请耐心等待</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 工具分类区 -->
+        <section class="mb-12">
+            <div class="glassmorphism p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-600"><i class="fas fa-lightbulb mr-2"></i>关于"一人市场部"</h2>
+                <p class="text-gray-700">"一人市场部"是一款面向中小企业的一站式市场运营解决方案，集成网站生成、市场策略制定、执行方案管理、品牌资料生成、创意内容创作、运营推广、客户管理等核心功能，帮助企业高效完成市场全流程工作。</p>
+            </div>
+
+            <div class="glassmorphism p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4 text-indigo-600"><i class="fas fa-lock mr-2"></i>只有神知道的世界</h2>
+                <div class="bg-indigo-50 p-4 rounded-lg">
+                    <p class="text-gray-700 mb-3"><a href="/user/pay" class="text-indigo-600 font-bold hover:underline">立即解锁隐藏专区</a></p>
+                    <p class="text-sm text-gray-600">非会员用户将在首次访问本站一段时间后可查看该分区，但无法使用会员功能，会员用户可无需等待直接解锁</p>
+                </div>
+            </div>
+
+            <!-- 热门工具 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-fire text-red-500 mr-2"></i>热门
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 待开发工具卡片 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <!-- 重复7次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速生成企业网站 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-globe text-blue-500 mr-2"></i>快速生成企业网站
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 实际工具卡片 -->
+                    <a href="https://www.huaweicloud.com/special/tuijian-18643728" target="_blank" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">华为云</h4>
+                                <span class="badge">外部链接</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">华为云建站服务</p>
+                    </a>
+                    <a href="https://lynxjs.org/zh/" target="_blank" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">AI建站</h4>
+                                <span class="badge">外部链接</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">AI驱动的网站建设</p>
+                    </a>
+                    <a href="https://market.aliyun.com/products/56598032/cmgj00043534.html" target="_blank" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">阿里云建站</h4>
+                                <span class="badge">外部链接</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">阿里云建站服务</p>
+                    </a>
+                    <a href="https://cloud.tencent.com/product/cloudpages" target="_blank" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-500 mr-3">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">腾讯云CloudPages</h4>
+                                <span class="badge">外部链接</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">腾讯云建站服务</p>
+                    </a>
+                    <!-- 待开发工具卡片 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <!-- 重复3次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 制定市场策略 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-chart-line text-green-500 mr-2"></i>制定市场策略
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 本地工具卡片 -->
+                    <a href="./品牌指数.html" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center text-green-500 mr-3">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">品牌指数检测</h4>
+                                <span class="badge">本地工具</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">品牌影响力评估工具</p>
+                    </a>
+                    <!-- 待开发工具卡片 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">市场调研</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">客户洞察</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">行业趋势</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">行业报告</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <!-- 重复3次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 基础资料生成 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-file-alt text-purple-500 mr-2"></i>基础资料生成
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 实际工具卡片 -->
+                    <a href="https://www.doubao.com/" target="_blank" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 mr-3">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">豆包</h4>
+                                <span class="badge">外部链接</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">AI内容生成工具</p>
+                    </a>
+                    <a href="https://www.coze.cn/" target="_blank" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-500 mr-3">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">扣子</h4>
+                                <span class="badge">外部链接</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">AI内容生成工具</p>
+                    </a>
+                    <!-- 待开发工具卡片 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <!-- 重复5次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 创意内容包装 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-paint-brush text-pink-500 mr-2"></i>创意内容包装
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 本地工具卡片 -->
+                    <a href="./灵感随想日记.html" class="tool-card bg-white p-4 hover:no-underline">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-500 mr-3">
+                                <i class="fas fa-lightbulb"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">灵感提示词</h4>
+                                <span class="badge">本地工具</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">创意灵感激发工具</p>
+                    </a>
+                    <!-- 待开发工具卡片 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <!-- 重复6次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 其他分类区（待开发） -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-tasks text-amber-500 mr-2"></i>制定执行方案
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 重复8次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 生成运营方案 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-chart-pie text-teal-500 mr-2"></i>生成运营方案
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 重复8次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 客户漏斗 -->
+            <div class="mb-12">
+                <h3 class="text-lg font-semibold mb-4 text-gray-800 flex items-center">
+                    <i class="fas fa-filter text-rose-500 mr-2"></i>客户漏斗
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <!-- 重复8次 -->
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                    <div class="tool-card bg-white p-4">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 mr-3">
+                                <i class="fas fa-wrench"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-gray-700">工具名称</h4>
+                                <span class="badge">待开发</span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-gray-500">功能开发中，敬请期待</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-gray-50 py-8 px-4 border-t border-gray-200">
+        <div class="container mx-auto">
+            <div class="text-center text-sm text-gray-500 space-y-2">
+                <p>当前版本：<strong>web_0.0.7-fix.5</strong></p>
+                <p><a href="https://beian.miit.gov.cn/" target="_blank" class="hover:text-indigo-600">滇ICP备19011046号-2</a></p>
+                <p>工具版本：web_0.0.7-fix.5</p>
+                <p>工具数量：176</p>
+                <div class="pt-4 mt-4 border-t border-gray-200">
+                    <p>created by <a href="https://space.coze.cn" class="text-indigo-600 hover:underline">coze space</a></p>
+                    <p class="text-xs mt-1">页面内容均由 AI 生成，仅供参考</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 移动端菜单切换
+        document.getElementById('mobileMenuButton').addEventListener('click', function() {
+            const menu = document.getElementById('mobileMenu');
+            const icon = this.querySelector('i');
+            
+            menu.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-md');
+                nav.classList.remove('shadow-sm');
+            } else {
+                nav.classList.remove('shadow-md');
+                nav.classList.add('shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>
