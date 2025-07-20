@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BSM品牌指数评估</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            display: flex;
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .input-section {
+            flex: 1;
+        }
+        .calculation-section {
+            flex: 1;
+        }
+        .result-section {
+            flex: 1;
+        }
+        h1 {
+            color: #1a56db;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .module {
+            margin-bottom: 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .module-header {
+            background-color: #1a56db;
+            color: white;
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .module-content {
+            padding: 15px;
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .slider-container {
+            padding: 10px 0;
+        }
+        input[type="range"] {
+            width: 100%;
+        }
+        .slider-value {
+            text-align: center;
+            font-weight: bold;
+            color: #1a56db;
+        }
+        .slider-desc {
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            margin-top: 5px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .btn-reset {
+            background-color: #94a3b8;
+            color: white;
+            margin-right: 10px;
+        }
+        .btn-calculate {
+            background-color: #f97316;
+            color: white;
+        }
+        .btn-download {
+            background-color: #1a56db;
+            color: white;
+            margin-right: 10px;
+        }
+        .btn-compare {
+            background-color: #94a3b8;
+            color: white;
+        }
+        .button-group {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .index-score {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1a56db;
+        }
+        .level-tag {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background-color: #fbbf24;
+            color: #0f172a;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .radar-chart-container {
+            width: 100%;
+            height: 300px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        #radar-chart {
+            width: 100%;
+            height: 100%;
+        }
+        .diagnosis-report {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+        .tip-text {
+            font-size: 12px;
+            color: #10b981;
+            margin-top: 5px;
+        }
+        .coefficient-display, .formula-display {
+            background-color: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+        .highlight-strong {
+            color: #10b981;
+            font-weight: bold;
+        }
+        .highlight-weak {
+            color: #ef4444;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>BSM品牌指数.给品牌称重</h1>
+    <div class="container">
+        <!-- 左侧：评估要素输入区 -->
+        <div class="section input-section">
+            <div class="form-group">
+                <label for="brand-name">品牌名称</label>
+                <input type="text" id="brand-name" placeholder="请输入品牌名称">
+            </div>
+            <div class="form-group">
+                <label for="industry">所属行业</label>
+                <select id="industry">
+                    <option value="">请选择行业</option>
+                    <option value="information-technology">信息技术</option>
+                    <option value="software-services">软件与服务</option>
+                    <option value="semiconductor">半导体与半导体生产设备</option>
+                    <option value="telecom">电信服务</option>
+                    <option value="media-entertainment">媒体与娱乐</option>
+                    <option value="retail">零售业</option>
+                    <option value="consumer-non-essential">消费品（非必需）</option>
+                    <option value="consumer-essential">消费品（必需）</option>
+                    <option value="food-beverage">食品与饮料</option>
+                    <option value="home-appliances">家用电器</option>
+                    <option value="automotive">汽车与汽车零部件</option>
+                    <option value="pharmaceutical">制药、生物科技与生命科学</option>
+                    <option value="healthcare">医疗保健设备与服务</option>
+                    <option value="chemicals">化学制品</option>
+                    <option value="materials">材料</option>
+                    <option value="construction-engineering">建筑与工程</option>
+                    <option value="construction-materials">建筑材料</option>
+                    <option value="aerospace">航空航天与国防</option>
+                    <option value="industrial-machinery">工业机械</option>
+                    <option value="electrical-equipment">电气设备</option>
+                    <option value="business-services">商业与专业服务</option>
+                    <option value="transportation">运输</option>
+                    <option value="energy">能源</option>
+                    <option value="utilities">公用事业</option>
+                    <option value="finance">金融业</option>
+                    <option value="insurance">保险业</option>
+                    <option value="real-estate">房地产</option>
+                    <option value="agriculture">农业</option>
+                    <option value="tourism">旅游业</option>
+                    <option value="education">教育业</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="development-stage">品牌发展阶段</label>
+                <select id="development-stage">
+                    <option value="">请选择发展阶段</option>
+                    <option value="initial">初生期</option>
+                    <option value="growing">成长期</option>
+                    <option value="stable">稳定期</option>
+                    <option value="fluctuating">波动期</option>
+                    <option value="declining">衰落期</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="market-position">市场定位</label>
+                <input type="text" id="market-position" placeholder="请简述品牌核心定位">
+            </div>
+
+            <!-- 品牌基础模块 -->
+            <div class="module">
+                <div class="module-header">
+                    <span>品牌基础模块</span>
+                    <span>+</span>
+                </div>
+                <div class="module-content">
+                    <div class="form-group">
+                        <label>品牌知名度</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="brand-awareness">
+                            <div class="slider-value" id="brand-awareness-value">5分</div>
+                            <div class="slider-desc">1分=无人知晓，10分=全民熟知</div>
+                            <div class="tip-text">市占小贴士：快消品行业的知名度每提升1分，可能带动0.8%的市场份额增长</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>品牌美誉度</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="brand-reputation">
+                            <div class="slider-value" id="brand-reputation-value">5分</div>
+                            <div class="slider-desc">1分=差评如潮，10分=口碑爆棚</div>
+                            <div class="tip-text">市占小贴士：服务行业的美誉度与复购率正相关度达0.7</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>品牌忠诚度</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="brand-loyalty">
+                            <div class="slider-value" id="brand-loyalty-value">5分</div>
+                            <div class="slider-desc">1分=零复购，10分=终身用户</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>品牌创新能力（营销/渠道）</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="brand-innovation">
+                            <div class="slider-value" id="brand-innovation-value">5分</div>
+                            <div class="slider-desc">1分=无创新，10分=行业标杆</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 市场表现模块 -->
+            <div class="module">
+                <div class="module-header">
+                    <span>市场表现模块</span>
+                    <span>+</span>
+                </div>
+                <div class="module-content">
+                    <div class="form-group">
+                        <label>市场占有率</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="market-share">
+                            <div class="slider-value" id="market-share-value">5分</div>
+                            <div class="slider-desc">1分=份额＜1%，10分=份额＞30%</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>市场增长率</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="market-growth">
+                            <div class="slider-value" id="market-growth-value">5分</div>
+                            <div class="slider-desc">1分=负增长，10分=年增＞50%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 科技与创新模块 -->
+            <div class="module">
+                <div class="module-header">
+                    <span>科技与创新模块</span>
+                    <span>+</span>
+                </div>
+                <div class="module-content">
+                    <div class="form-group">
+                        <label>品牌科技能力</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="tech-capability">
+                            <div class="slider-value" id="tech-capability-value">5分</div>
+                            <div class="slider-desc">1分=技术空白，10分=核心技术领先</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>研发能力</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="rnd-capability">
+                            <div class="slider-value" id="rnd-capability-value">5分</div>
+                            <div class="slider-desc">1分=无研发投入，10分=研发团队500+人</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>独特技术</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="unique-technology">
+                            <div class="slider-value" id="unique-technology-value">5分</div>
+                            <div class="slider-desc">1分=无专利，10分=独家技术主导行业</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>创新产品</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="innovative-products">
+                            <div class="slider-value" id="innovative-products-value">5分</div>
+                            <div class="slider-desc">1分=3年无新品，10分=年均3款爆款</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 感性价值模块 -->
+            <div class="module">
+                <div class="module-header">
+                    <span>感性价值模块</span>
+                    <span>+</span>
+                </div>
+                <div class="module-content">
+                    <div class="form-group">
+                        <label>品牌情感共鸣</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="emotional-resonance">
+                            <div class="slider-value" id="emotional-resonance-value">5分</div>
+                            <div class="slider-desc">1分=无情感连接，10分=民族情怀级认同</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>品牌文化契合度</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="cultural-fit">
+                            <div class="slider-value" id="cultural-fit-value">5分</div>
+                            <div class="slider-desc">1分=文化冲突，10分=成为群体文化符号</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>品牌人格魅力</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="brand-personality">
+                            <div class="slider-value" id="brand-personality-value">5分</div>
+                            <div class="slider-desc">1分=无特色，10分=人格化标签鲜明</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 财务与行业模块 -->
+            <div class="module">
+                <div class="module-header">
+                    <span>财务与行业模块</span>
+                    <span>+</span>
+                </div>
+                <div class="module-content">
+                    <div class="form-group">
+                        <label>品牌盈利能力</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="profitability">
+                            <div class="slider-value" id="profitability-value">5分</div>
+                            <div class="slider-desc">1分=持续亏损，10分=利润率＞30%</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>品牌溢价能力</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="premium-capability">
+                            <div class="slider-value" id="premium-capability-value">5分</div>
+                            <div class="slider-desc">1分=无溢价，10分=价格高出同类50%+</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>行业前景</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="industry-prospect">
+                            <div class="slider-value" id="industry-prospect-value">5分</div>
+                            <div class="slider-desc">1分=行业萎缩，10分=政策红利期</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>行业竞争格局</label>
+                        <div class="slider-container">
+                            <input type="range" min="1" max="10" value="5" class="slider" id="industry-competition">
+                            <div class="slider-value" id="industry-competition-value">5分</div>
+                            <div class="slider-desc">1分=红海厮杀，10分=寡头垄断</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-group">
+                <button class="btn btn-reset" id="reset-btn">重置输入</button>
+                <button class="btn btn-calculate" id="calculate-btn">开始计算</button>
+            </div>
+        </div>
+
+        <!-- 中间：计算过程展示区 -->
+        <div class="section calculation-section">
+            <h3>计算过程</h3>
+            <div class="coefficient-display" id="coefficient-display">
+                请先填写品牌信息并点击"开始计算"，系统将自动匹配各要素系数...
+            </div>
+            <div class="formula-display" id="formula-display">
+                总分计算公式将在这里显示...
+            </div>
+            <div class="formula-display" id="key-factors">
+                关键要素分析将在这里显示...
+            </div>
+        </div>
+
+        <!-- 右侧：结果输出区 -->
+        <div class="section result-section">
+            <div class="result-header">
+                <div>市占力·品牌指数：</div>
+                <div class="index-score" id="total-score">--</div>
+                <div class="level-tag" id="level-tag">请开始计算</div>
+            </div>
+            <div class="radar-chart-container">
+                <canvas id="radar-chart"></canvas>
+            </div>
+            <div class="diagnosis-report" id="diagnosis-report">
+                <h4>诊断报告</h4>
+                <p>请完成评估计算以获取详细诊断报告...</p>
+            </div>
+            <div class="button-group">
+                <button class="btn btn-download" id="download-btn">下载评估报告</button>
+                <button class="btn btn-compare" id="compare-btn">对比行业标杆</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 初始化雷达图
+        const radarCtx = document.getElementById('radar-chart').getContext('2d');
+        let radarChart = new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['市场力', '技术力', '情感力'],
+                datasets: [{
+                    label: '品牌指数',
+                    data: [5, 5, 5],
+                    backgroundColor: 'rgba(26, 86, 219, 0.2)',
+                    borderColor: 'rgba(26, 86, 219, 1)',
+                    pointBackgroundColor: 'rgba(26, 86, 219, 1)',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: 'rgba(26, 86, 219, 1)'
+                }]
+            },
+            options: {
+                scales: {
+                    r: {
+                        angleLines: {
+                            display: true
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 10
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // 滑块值实时显示
+        const sliders = document.querySelectorAll('.slider');
+        sliders.forEach(slider => {
+            slider.addEventListener('input', function() {
+                const valueDisplay = document.getElementById(this.id + '-value');
+                valueDisplay.textContent = this.value + '分';
+            });
+        });
+
+        // 模块折叠/展开功能
+        const moduleHeaders = document.querySelectorAll('.module-header');
+        moduleHeaders.forEach(header => {
+            header.addEventListener('click', function() {
+                const content = this.nextElementSibling;
+                const icon = this.querySelector('span:last-child');
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    icon.textContent = '-';
+                } else {
+                    content.style.display = 'none';
+                    icon.textContent = '+';
+                }
+            });
+        });
+
+        // 重置按钮功能
+        document.getElementById('reset-btn').addEventListener('click', function() {
+            // 重置输入框
+            document.getElementById('brand-name').value = '';
+            document.getElementById('industry').selectedIndex = 0;
+            document.getElementById('development-stage').selectedIndex = 0;
+            document.getElementById('market-position').value = '';
+            
+            // 重置滑块
+            sliders.forEach(slider => {
+                slider.value = 5;
+                document.getElementById(slider.id + '-value').textContent = '5分';
+            });
+            
+            // 重置结果区
+            document.getElementById('total-score').textContent = '--';
+            document.getElementById('level-tag').textContent = '请开始计算';
+            document.getElementById('level-tag').style.backgroundColor = '#fbbf24';
+            document.getElementById('diagnosis-report').innerHTML = '<h4>诊断报告</h4><p>请完成评估计算以获取详细诊断报告...</p>';
+            document.getElementById('coefficient-display').textContent = '请先填写品牌信息并点击"开始计算"，系统将自动匹配各要素系数...';
+            document.getElementById('formula-display').textContent = '总分计算公式将在这里显示...';
+            document.getElementById('key-factors').textContent = '关键要素分析将在这里显示...';
+            
+            // 重置雷达图
+            updateRadarChart(5, 5, 5);
+        });
+
+        // 计算按钮功能
+        document.getElementById('calculate-btn').addEventListener('click', function() {
+            // 获取输入值
+            const industry = document.getElementById('industry').value;
+            const developmentStage = document.getElementById('development-stage').value;
+            
+            if (!industry || !developmentStage) {
+                alert('请选择所属行业和品牌发展阶段');
+                return;
+            }
+
+            // 系数计算逻辑
+            const coefficients = calculateCoefficients(industry, developmentStage);
+            
+            // 显示系数
+            displayCoefficients(coefficients);
+            
+            // 计算总分
+            const totalScore = calculateTotalScore(coefficients);
+            document.getElementById('total-score').textContent = totalScore.toFixed(1);
+            
+            // 确定等级
+            const levelInfo = determineLevel(totalScore);
+            document.getElementById('level-tag').textContent = levelInfo.name;
+            document.getElementById('level-tag').style.backgroundColor = levelInfo.color;
+            
+            // 显示公式
+            displayFormula(coefficients);
+            
+            // 显示关键要素
+            displayKeyFactors();
+            
+            // 生成诊断报告
+            generateDiagnosisReport(totalScore, coefficients);
+            
+            // 更新雷达图
+            const marketPower = calculateMarketPower();
+            const techPower = calculateTechPower();
+            const emotionalPower = calculateEmotionalPower();
+            updateRadarChart(marketPower, techPower, emotionalPower);
+        });
+
+        // 更新雷达图数据
+        function updateRadarChart(marketPower, techPower, emotionalPower) {
+            radarChart.data.datasets[0].data = [marketPower, techPower, emotionalPower];
+            radarChart.update();
+        }
+
+        // 计算三维得分
+        function calculateMarketPower() {
+            const marketShare = parseFloat(document.getElementById('market-share').value);
+            const marketGrowth = parseFloat(document.getElementById('market-growth').value);
+            const profitability = parseFloat(document.getElementById('profitability').value);
+            return ((marketShare + marketGrowth + profitability) / 3).toFixed(1);
+        }
+
+        function calculateTechPower() {
+            const techCapability = parseFloat(document.getElementById('tech-capability').value);
+            const rndCapability = parseFloat(document.getElementById('rnd-capability').value);
+            const innovativeProducts = parseFloat(document.getElementById('innovative-products').value);
+            return ((techCapability + rndCapability + innovativeProducts) / 3).toFixed(1);
+        }
+
+        function calculateEmotionalPower() {
+            const emotionalResonance = parseFloat(document.getElementById('emotional-resonance').value);
+            const culturalFit = parseFloat(document.getElementById('cultural-fit').value);
+            const brandPersonality = parseFloat(document.getElementById('brand-personality').value);
+            return ((emotionalResonance + culturalFit + brandPersonality) / 3).toFixed(1);
+        }
+
+        // 计算系数
+        function calculateCoefficients(industry, stage) {
+            let coefficients = {
+                brandAwareness: 1.0,
+                brandReputation: 1.0,
+                brandLoyalty: 1.0,
+                brandInnovation: 1.0,
+                marketShare: 1.0,
+                marketGrowth: 1.0,
+                techCapability: 1.0,
+                rndCapability: 1.0,
+                uniqueTechnology: 1.0,
+                innovativeProducts: 1.0,
+                emotionalResonance: 1.0,
+                culturalFit: 1.0,
+                brandPersonality: 1.0,
+                profitability: 1.0,
+                premiumCapability: 1.0,
+                industryProspect: 1.0,
+                industryCompetition: 1.0
+            };
+
+            // 行业系数调整
+            if (industry === 'information-technology' || industry === 'software-services' || industry === 'semiconductor') {
+                coefficients.techCapability = 1.4;
+                coefficients.rndCapability = 1.4;
+                coefficients.innovativeProducts = 1.3;
+            } else if (industry === 'consumer-non-essential' || industry === 'consumer-essential' || industry === 'food-beverage') {
+                coefficients.brandAwareness = 1.2;
+                coefficients.brandReputation = 1.3;
+                coefficients.marketShare = 1.2;
+            } else if (industry === 'pharmaceutical' || industry === 'healthcare') {
+                coefficients.rndCapability = 1.5;
+                coefficients.uniqueTechnology = 1.5;
+                coefficients.premiumCapability = 1.3;
+            } else if (industry === 'finance' || industry === 'insurance') {
+                coefficients.profitability = 1.3;
+                coefficients.brandReputation = 1.4;
+            }
+
+            // 发展阶段系数调整
+            if (stage === 'growing') {
+                coefficients.marketGrowth = 1.3;
+                coefficients.innovativeProducts = 1.2;
+            } else if (stage === 'stable') {
+                coefficients.brandLoyalty = 1.2;
+                coefficients.profitability = 1.2;
+            } else if (stage === 'initial') {
+                coefficients.brandInnovation = 1.3;
+                coefficients.techCapability = 1.2;
+            }
+
+            return coefficients;
+        }
+
+        // 显示系数
+        function displayCoefficients(coefficients) {
+            const industryText = document.getElementById('industry').options[document.getElementById('industry').selectedIndex].text;
+            const stageText = document.getElementById('development-stage').options[document.getElementById('development-stage').selectedIndex].text;
+            
+            let html = `您的品牌属于【${industryText}+${stageText}】，各要素系数如下：<br>`;
+            html += `品牌知名度：${coefficients.brandAwareness}<br>`;
+            html += `品牌美誉度：${coefficients.brandReputation}<br>`;
+            html += `市场增长率：${coefficients.marketGrowth}<br>`;
+            html += `品牌科技能力：${coefficients.techCapability}<br>`;
+            html += `...（其他系数略）`;
+            
+            document.getElementById('coefficient-display').innerHTML = html;
+        }
+
+        // 计算总分
+        function calculateTotalScore(coefficients) {
+            const scores = {
+                brandAwareness: parseFloat(document.getElementById('brand-awareness').value),
+                brandReputation: parseFloat(document.getElementById('brand-reputation').value),
+                brandLoyalty: parseFloat(document.getElementById('brand-loyalty').value),
+                brandInnovation: parseFloat(document.getElementById('brand-innovation').value),
+                marketShare: parseFloat(document.getElementById('market-share').value),
+                marketGrowth: parseFloat(document.getElementById('market-growth').value),
+                techCapability: parseFloat(document.getElementById('tech-capability').value),
+                rndCapability: parseFloat(document.getElementById('rnd-capability').value),
+                uniqueTechnology: parseFloat(document.getElementById('unique-technology').value),
+                innovativeProducts: parseFloat(document.getElementById('innovative-products').value),
+                emotionalResonance: parseFloat(document.getElementById('emotional-resonance').value),
+                culturalFit: parseFloat(document.getElementById('cultural-fit').value),
+                brandPersonality: parseFloat(document.getElementById('brand-personality').value),
+                profitability: parseFloat(document.getElementById('profitability').value),
+                premiumCapability: parseFloat(document.getElementById('premium-capability').value),
+                industryProspect: parseFloat(document.getElementById('industry-prospect').value),
+                industryCompetition: parseFloat(document.getElementById('industry-competition').value)
+            };
+
+            let total = 0;
+            for (const key in scores) {
+                total += scores[key] * coefficients[key];
+            }
+            
+            return total;
+        }
+
+        // 确定等级
+        function determineLevel(score) {
+            if (score >= 110) {
+                return { name: '稳定强势型品牌', color: '#fbbf24' };
+            } else if (score >= 80) {
+                return { name: '稳定发展型品牌', color: '#10b981' };
+            } else if (score >= 50) {
+                return { name: '初生成长型品牌', color: '#3b82f6' };
+            } else if (score >= 30) {
+                return { name: '波动调整型品牌', color: '#f59e0b' };
+            } else {
+                return { name: '衰落下滑型品牌', color: '#ef4444' };
+            }
+        }
+
+        // 显示计算公式
+        function displayFormula(coefficients) {
+            const brandAwareness = document.getElementById('brand-awareness').value;
+            const brandReputation = document.getElementById('brand-reputation').value;
+            
+            let formula = `总分=（知名度${brandAwareness}×${coefficients.brandAwareness}）+`;
+            formula += `（美誉度${brandReputation}×${coefficients.brandReputation}）+`;
+            formula += `（忠诚度${document.getElementById('brand-loyalty').value}×${coefficients.brandLoyalty}）+`;
+            formula += `...（其他项略）= ${document.getElementById('total-score').textContent}`;
+            
+            document.getElementById('formula-display').textContent = formula;
+        }
+
+        // 显示关键要素
+        function displayKeyFactors() {
+            const sliders = document.querySelectorAll('.slider');
+            let strongFactors = [];
+            let weakFactors = [];
+            
+            sliders.forEach(slider => {
+                const value = parseFloat(slider.value);
+                const id = slider.id;
+                const name = getFactorName(id);
+                
+                if (value >= 8) {
+                    strongFactors.push(name + '（' + value + '分）');
+                } else if (value <= 3) {
+                    weakFactors.push(name + '（' + value + '分）');
+                }
+            });
+            
+            let html = '';
+            if (strongFactors.length > 0) {
+                html += `优势项：<span class="highlight-strong">${strongFactors.join('、')}</span><br>`;
+            }
+            if (weakFactors.length > 0) {
+                html += `风险项：<span class="highlight-weak">${weakFactors.join('、')}</span>`;
+            }
+            
+            if (html === '') {
+                html = '各要素得分较为均衡，无明显优势或风险项';
+            }
+            
+            document.getElementById('key-factors').innerHTML = html;
+        }
+
+        // 获取要素名称
+        function getFactorName(id) {
+            const names = {
+                'brand-awareness': '品牌知名度',
+                'brand-reputation': '品牌美誉度',
+                'brand-loyalty': '品牌忠诚度',
+                'brand-innovation': '品牌创新能力',
+                'market-share': '市场占有率',
+                'market-growth': '市场增长率',
+                'tech-capability': '品牌科技能力',
+                'rnd-capability': '研发能力',
+                'unique-technology': '独特技术',
+                'innovative-products': '创新产品',
+                'emotional-resonance': '品牌情感共鸣',
+                'cultural-fit': '品牌文化契合度',
+                'brand-personality': '品牌人格魅力',
+                'profitability': '品牌盈利能力',
+                'premium-capability': '品牌溢价能力',
+                'industry-prospect': '行业前景',
+                'industry-competition': '行业竞争格局'
+            };
+            return names[id] || id;
+        }
+
+        // 生成诊断报告
+        function generateDiagnosisReport(totalScore, coefficients) {
+            const brandName = document.getElementById('brand-name').value || '您的品牌';
+            const strongFactors = getStrongFactors();
+            const weakFactors = getWeakFactors();
+            
+            let report = `<h4>诊断报告</h4>`;
+            report += `<p><strong>核心结论：</strong>${brandName}的市占力指数为${totalScore.toFixed(1)}分，`;
+            
+            if (totalScore >= 110) {
+                report += `属于稳定强势型品牌。在${strongFactors.join('和')}方面表现突出，是行业内的标杆企业。</p>`;
+            } else if (totalScore >= 80) {
+                report += `属于稳定发展型品牌。${strongFactors.length > 0 ? '在' + strongFactors.join('和') + '方面表现良好，' : ''}但${weakFactors.length > 0 ? '在' + weakFactors.join('和') + '存在一定提升空间。' : '整体发展平稳。'}</p>`;
+            } else if (totalScore >= 50) {
+                report += `属于初生成长型品牌。具备一定的发展潜力，特别是在${strongFactors.length > 0 ? strongFactors.join('和') + '方面有亮点，' : ''}但需重点提升${weakFactors.join('和')}。</p>`;
+            } else {
+                report += `属于${totalScore >= 30 ? '波动调整型' : '衰落下滑型'}品牌。${weakFactors.length > 0 ? '在' + weakFactors.join('和') + '方面存在明显短板，需进行战略调整。' : ''}</p>`;
+            }
+            
+            report += `<p><strong>市场部行动建议：</strong></p>`;
+            report += `<ul>`;
+            report += `<li>短期：建议针对${weakFactors.length > 0 ? weakFactors[0] : '品牌知名度'}问题，加大市场推广力度</li>`;
+            report += `<li>长期：持续强化${strongFactors.length > 0 ? strongFactors[0] : '核心技术'}优势，构建品牌护城河</li>`;
+            report += `</ul>`;
+            
+            document.getElementById('diagnosis-report').innerHTML = report;
+        }
+
+        // 获取优势和劣势要素
+        function getStrongFactors() {
+            const sliders = document.querySelectorAll('.slider');
+            const factors = [];
+            
+            sliders.forEach(slider => {
+                const value = parseFloat(slider.value);
+                if (value >= 8) {
+                    factors.push(getFactorName(slider.id));
+                }
+            });
+            
+            return factors.length > 0 ? factors : ['部分要素'];
+        }
+
+        function getWeakFactors() {
+            const sliders = document.querySelectorAll('.slider');
+            const factors = [];
+            
+            sliders.forEach(slider => {
+                const value = parseFloat(slider.value);
+                if (value <= 3) {
+                    factors.push(getFactorName(slider.id));
+                }
+            });
+            
+            return factors.length > 0 ? factors : ['品牌知名度'];
+        }
+
+        // 下载报告按钮
+        document.getElementById('download-btn').addEventListener('click', function() {
+            if (document.getElementById('total-score').textContent === '--') {
+                alert('请先完成评估计算');
+                return;
+            }
+            alert('报告生成中，即将下载PDF版评估报告');
+        });
+
+        // 对比行业标杆按钮
+        document.getElementById('compare-btn').addEventListener('click', function() {
+            if (document.getElementById('total-score').textContent === '--') {
+                alert('请先完成评估计算');
+                return;
+            }
+            const industryText = document.getElementById('industry').options[document.getElementById('industry').selectedIndex].text;
+            alert(`同行业【${industryText}】TOP3品牌指数区间：\n1. 品牌A：120-130分\n2. 品牌B：110-120分\n3. 品牌C：100-110分\n您的品牌与行业标杆的差距为${(110 - parseFloat(document.getElementById('total-score').textContent)).toFixed(1)}分`);
+        });
+    </script>
+</body>
+</html>
